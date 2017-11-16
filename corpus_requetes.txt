@@ -99,7 +99,27 @@ Je veux les articles dont le mot robot et present dans l’une des légendes d�
 Je veux les articles dont les titres contiennent le mot mémoire
 Je veux les articles liés à l'environnement.
 Je veux les articles qui parlent de « l’innovation ».
-Je veux les articles qui parlent de Zuckerberg.Je veux les articles qui ont été écrits en mai 2011.Afficher les articles de la rubrique “Focus”.Lister les articles qui contiennent des images au microscope.Afficher les articles qui parlent de 1995Je veux les avancées en biochimie de l’année 2011.Je veux les articles écrits par Laveissière contenant des images.Je voudrais les titres d’articles datant de 2012 et parlant de tempête.Je voudrais les dates des articles parlant de tsunamis et de Japon.Je voudrais les articles de la rubrique Focus parlant de ZuckerbergLister les articles parlant de biochimie et ne parlant pas d’enzymologie.Afficher les articles écrits entre mai 2011 et août 2011.Je voudrais les articles avec photo écrits en 2011 parlant d’enzimologie. Je souhaite trouver les titres d’articles sans image parlant de séismes ou de tsunamis.Trouve moi les articles comprenant une image d’éléphant ou de baleine.Lister les articles parlant de biochimie et ne parlant pas d’enzymologie.Afficher les articles écrits entre mai 2011 et août 2011.Je voudrais les articles avec photo écrits en 2011 parlant d’enzimologie. Je souhaite trouver les titres d’articles sans image parlant de séismes ou de tsunamis.Trouve moi les articles comprenant une image d’éléphant ou de baleine.Je souhaite obtenir les articles sur le thème des micro-organismes mais ne concernant pas les algues.
+Je veux les articles qui parlent de Zuckerberg.
+Je veux les articles qui ont été écrits en mai 2011.
+Afficher les articles de la rubrique “Focus”.
+Lister les articles qui contiennent des images au microscope.
+Afficher les articles qui parlent de 1995
+Je veux les avancées en biochimie de l’année 2011.
+Je veux les articles écrits par Laveissière contenant des images.
+Je voudrais les titres d’articles datant de 2012 et parlant de tempête.
+Je voudrais les dates des articles parlant de tsunamis et de Japon.
+Je voudrais les articles de la rubrique Focus parlant de Zuckerberg
+Lister les articles parlant de biochimie et ne parlant pas d’enzymologie.
+Afficher les articles écrits entre mai 2011 et août 2011.
+Je voudrais les articles avec photo écrits en 2011 parlant d’enzimologie. 
+Je souhaite trouver les titres d’articles sans image parlant de séismes ou de tsunamis.
+Trouve moi les articles comprenant une image d’éléphant ou de baleine.
+Lister les articles parlant de biochimie et ne parlant pas d’enzymologie.
+Afficher les articles écrits entre mai 2011 et août 2011.
+Je voudrais les articles avec photo écrits en 2011 parlant d’enzimologie. 
+Je souhaite trouver les titres d’articles sans image parlant de séismes ou de tsunamis.
+Trouve moi les articles comprenant une image d’éléphant ou de baleine.
+Je souhaite obtenir les articles sur le thème des micro-organismes mais ne concernant pas les algues.
 Je veux les articles qui parlent d’innovation et de la France dans la rubrique Focus ?
 Je veux les articles sur "environnement" ou "innovation" sans "gouvernement".
 Je veux les articles sur le développement industriel.

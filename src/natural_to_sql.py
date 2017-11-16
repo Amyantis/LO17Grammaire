@@ -3,6 +3,7 @@ from antlr4 import CommonTokenStream, InputStream
 from gen.GrammaireSQLLexer import GrammaireSQLLexer
 from gen.GrammaireSQLParser import GrammaireSQLParser
 from src.check_spell import Lexicon, get_lexicon
+from src.sql_request import DataBase
 
 
 def make_sql_request(tree):
@@ -14,8 +15,10 @@ def make_sql_request(tree):
         sql.append('article')
     if tree.BULLETIN() is not None:
         sql.append('bulletin')
+    if tree.MOT() or tree.WHEN():
+        sql.append('WHERE')
     if tree.MOT() and tree.ps:
-        sql += 'WHERE titre LIKE'.split(' ')
+        sql += 'titre LIKE'.split(' ')
         if tree.ps.par1 is not None:
             sql.append('"%' + tree.ps.par1.a.text + '%"')
         if tree.ps.par2 is not None:
@@ -25,6 +28,13 @@ def make_sql_request(tree):
             if conj == 'ou':
                 sql.append('OR')
             sql.append('"%' + tree.ps.par2.a.text + '%"')
+    if tree.WHEN():
+        if tree.te.year_ is not None:
+            digits = [tree.te.year_.digit1.text, tree.te.year_.digit2.text, tree.te.year_.digit3.text,
+                      tree.te.year_.digit4.text]
+            year = int("".join(digits))
+            sql.append('year(Column)=%d' % year)
+            # TODO: add other time of date
     sql.append(';')
 
     return ' '.join(sql)
@@ -49,31 +59,91 @@ def lemmatisate_word(lexicon, word):
     if lemma is None:
         return word
     if isinstance(lemma, list):
-        # todo let user should which lemma use?
-        return lemma[0]
+        # let the user choose the lemma he wants
+        while True:
+            s = "Select a word in the following list of lemmas for word %s:\n\t%s"
+            choice = input(s % (word, lemma))
+            choice.strip()
+            choice.lower()
+            for l in lemma:
+                if choice == l:
+                    return l
+            print("Unknown choice", choice)
     return lemma
 
 
-def lemmatisate_expression(lexicon, expression):
-    return " ".join(lemmatisate_word(lexicon, word) for word in expression.split(" "))
+def clean_expression(lexicon, structure_lexicon, known_param_lexicon, expression):
+    has_found_structure_word = False
+
+    l = []
+    for word in expression.split(" "):
+        if word in known_param_lexicon:
+            continue
+        if not has_found_structure_word and word in structure_lexicon:
+            word = structure_lexicon[word]
+            has_found_structure_word = True
+        else:
+            word = lemmatisate_word(lexicon, word)
+            if not has_found_structure_word and word in structure_lexicon:
+                word = structure_lexicon[word]
+                has_found_structure_word = True
+        l.append(word)
+
+    return " ".join(l)
 
 
-if __name__ == '__main__':
+def get_structure_lexicon():
+    with open("structure_lexique.txt") as fdesc:
+        structure_words = [line.split(" ") for line in fdesc.readlines()]
+        d = {}
+        for list_of_words in structure_words:
+            for word in list_of_words:
+                d[word] = list_of_words[0]
+    return d
+
+
+def get_stoplist():
     with open('stoplist.txt') as fdesc:
         stoplist = set(fdesc.read().split('\n'))
+    return stoplist
+
+
+def get_known_param_lexicon():
+    with open('know_param_lexique.txt') as fdesc:
+        known_param = set(fdesc.read().split('\n'))
+    return known_param
+
+
+def main():
+    stoplist = get_stoplist()
 
     lexicon = Lexicon(get_lexicon())
 
-    request_natural = "Combien d'articles parlent de la chine"
-    print("Natural input request:\n\t", request_natural)
+    structure_lexicon = get_structure_lexicon()
 
-    request_natural = request_natural.lower()
-    request_natural = " ".join(request_natural.split("'"))
+    known_param_lexicon = get_known_param_lexicon()
 
-    request_natural = apply_stoplist(stoplist, request_natural)
-    print("Stoplisted natural input request:\n\t", request_natural)
-    request_natural = lemmatisate_expression(lexicon, request_natural)
-    print("Stoplisted and lemmatisated natural input request:\n\t", request_natural)
+    db = DataBase()
 
-    sql = convert_natural_to_sql(request_natural)
-    print(sql)
+    while True:
+        request_natural = input("Question en langage naturel:")
+        print("Natural input request:\n\t", request_natural)
+
+        request_natural = request_natural.lower()
+        request_natural = " ".join(request_natural.split("'"))
+        request_natural = " ".join(request_natural.split("’"))
+
+        request_natural = apply_stoplist(stoplist, request_natural)
+        print("Stoplisted natural input request:\n\t", request_natural)
+
+        request_natural = clean_expression(lexicon, structure_lexicon, known_param_lexicon, request_natural)
+        print("Stoplisted and lemmatisated natural input request:\n\t", request_natural)
+
+        sql = convert_natural_to_sql(request_natural)
+        print(sql)
+        if bool(input("Apply query?")):
+            db.execute(sql)
+
+
+if __name__ == '__main__':
+    main()
