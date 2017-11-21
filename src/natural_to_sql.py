@@ -12,28 +12,28 @@ def make_sql_request(tree):
     if tree.COUNT():
         sql = 'SELECT COUNT(*) FROM'.split(' ')
     if tree.ARTICLE() is not None:
-        sql.append('article')
+        sql.append('titre')
     if tree.BULLETIN() is not None:
-        sql.append('bulletin')
+        sql.append('numero')
     if tree.MOT() or tree.WHEN():
         sql.append('WHERE')
     if tree.MOT() and tree.ps:
-        sql += 'titre LIKE'.split(' ')
+        sql += 'mot LIKE'.split(' ')
         if tree.ps.par1 is not None:
-            sql.append('"%' + tree.ps.par1.a.text + '%"')
+            sql.append("'%" + tree.ps.par1.a.text + "%'")
         if tree.ps.par2 is not None:
             conj = str(tree.ps.CONJ()[0])
             if conj == 'et':
                 sql.append('AND')
             if conj == 'ou':
                 sql.append('OR')
-            sql.append('"%' + tree.ps.par2.a.text + '%"')
+            sql.append("'%" + tree.ps.par2.a.text + "%'")
     if tree.WHEN():
         if tree.te.year_ is not None:
             digits = [tree.te.year_.digit1.text, tree.te.year_.digit2.text, tree.te.year_.digit3.text,
                       tree.te.year_.digit4.text]
             year = int("".join(digits))
-            sql.append('year(Column)=%d' % year)
+            sql.append('year(annee)=%d' % year)
             # TODO: add other time of date
     sql.append(';')
 
@@ -109,7 +109,7 @@ def get_stoplist():
 
 
 def get_known_param_lexicon():
-    with open('know_param_lexique.txt') as fdesc:
+    with open('known_param_lexique.txt') as fdesc:
         known_param = set(fdesc.read().split('\n'))
     return known_param
 
