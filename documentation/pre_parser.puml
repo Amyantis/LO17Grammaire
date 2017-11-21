@@ -1,0 +1,45 @@
+@startuml
+
+actor User
+
+package "Pré-parser pour le language naturel" {
+    [Formateur général] as fgen
+
+    [Stoplist\nEnsemble des mots non-significatifs] as stoplist
+
+    [Table de hachage pour\nla structure d'une requête] as hash_struct
+
+    control Organisateur
+
+    package "Correcteur orthographique" {
+        [Ensemble des mots du corpus] as mot_corpus
+        [Correcteur] as correcteur
+        [Algorithme de Proximité orthographique] as proxi
+        [Algorithme de Levenshtein] as leven
+    }
+}
+
+[Antlr] as antlr
+
+User --> fgen : 1. Je VEUX les Articles parlant de Pastik
+fgen --> stoplist : 2. je veux les articles parlant de pastik
+
+stoplist --> Organisateur : 3. veux articles parlant pastik
+
+Organisateur --> hash_struct : 4. veux, articles, parlant
+Organisateur --> correcteur : 4. plastik
+
+hash_struct --> Organisateur : 8. vouloir, article, contenir
+
+mot_corpus .-  correcteur
+correcteur -- proxi : 5. pastik
+correcteur -- leven : 5. pastik
+
+
+correcteur --> User : 6. platique, patrick, pastis
+User --> correcteur : 7. plastique
+correcteur --> Organisateur : 8. plastique
+
+Organisateur --> antlr : 9. vouloir article contenir plastique
+
+@enduml

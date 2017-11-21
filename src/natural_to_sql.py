@@ -6,6 +6,7 @@ from src.GrammaireSQLListener import GrammaireSQLListener
 from src.check_spell import Lexicon, get_lexicon
 from src.sql_request import DataBase
 
+
 def convert_natural_to_sql(request_natural: str):
     input_stream = InputStream(request_natural)
     lexer = GrammaireSQLLexer(input_stream)
@@ -63,7 +64,7 @@ def clean_expression(lexicon, structure_lexicon, known_param_lexicon, expression
 
 
 def get_structure_lexicon():
-    with open("structure_lexique.txt") as fdesc:
+    with open("ressources/structure_lexique.txt") as fdesc:
         structure_words = [line.split(" ") for line in fdesc.readlines()]
         d = {}
         for list_of_words in structure_words:
@@ -73,13 +74,13 @@ def get_structure_lexicon():
 
 
 def get_stoplist():
-    with open('stoplist.txt') as fdesc:
+    with open('ressources/stoplist.txt') as fdesc:
         stoplist = set(fdesc.read().split('\n'))
     return stoplist
 
 
 def get_known_param_lexicon():
-    with open('known_param_lexique.txt') as fdesc:
+    with open('ressources/known_param_lexique.txt') as fdesc:
         known_param = set(fdesc.read().split('\n'))
     return known_param
 
@@ -93,7 +94,7 @@ def main():
 
     known_param_lexicon = get_known_param_lexicon()
 
-    db = DataBase()
+    # db = DataBase()
 
     while True:
         request_natural = input("Question en langage naturel:")
@@ -111,8 +112,8 @@ def main():
 
         sql = convert_natural_to_sql(request_natural)
         print(sql)
-        if bool(input("Apply query?")):
-            db.execute(sql)
+        # if bool(input("Apply query?")):
+        #     db.execute(sql)
 
 
 if __name__ == '__main__':

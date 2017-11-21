@@ -135,7 +135,7 @@ class GrammaireSQLListener(ParseTreeListener):
 
 
 if __name__ == '__main__':
-    request_natural = "combien article parution 2017 contenir Al et Ja"
+    request_natural = "combien article parution 2017 contenir nobel et alimentation"
     input_stream = InputStream(request_natural)
     lexer = GrammaireSQLLexer(input_stream)
     stream = CommonTokenStream(lexer)

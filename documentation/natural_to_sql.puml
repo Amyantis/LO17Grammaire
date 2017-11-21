@@ -1,0 +1,13 @@
+@startuml
+
+:Utilisateur: as user
+[Pré-formateur\nlangage naturel] as formatter
+[Parser Antlr:\nNaturel vers SQL] as antlr
+database "Base de données" as db
+
+user --> formatter : Requête en langage naturel\n'Je veux les ARTICLES\nqui parlent de Pauliteknique'
+formatter --> antlr : Requête en langage naturel\nformaté et simple\n'vouloir articles\ncontenir Polytechnique'
+antlr --> db : Requête purement SQL\n'SELECT DICTINCT * FROM table_article\nWHERE titre LIKE `%Polytechnique%`'
+db --> user : Liste des résultats
+
+@enduml

@@ -94,7 +94,7 @@ class Lexicon():
 
 
 def get_lexicon():
-    with open('filtre_corpus.txt') as fdesc:
+    with open('ressources/filtre_corpus.txt') as fdesc:
         file = fdesc.read()
     return [line.split('\t') for line in file.split('\n') if len(line.split('\t')) == 2]
 
