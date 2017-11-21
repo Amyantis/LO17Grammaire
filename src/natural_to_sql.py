@@ -1,44 +1,10 @@
-from antlr4 import CommonTokenStream, InputStream
+from antlr4 import CommonTokenStream, InputStream, ParseTreeWalker
 
 from gen.GrammaireSQLLexer import GrammaireSQLLexer
 from gen.GrammaireSQLParser import GrammaireSQLParser
+from src.GrammaireSQLListener import GrammaireSQLListener
 from src.check_spell import Lexicon, get_lexicon
 from src.sql_request import DataBase
-
-
-def make_sql_request(tree):
-    if tree.SELECT():
-        sql = 'SELECT DISTINCT * FROM'.split(' ')
-    if tree.COUNT():
-        sql = 'SELECT COUNT(*) FROM'.split(' ')
-    if tree.ARTICLE() is not None:
-        sql.append('titre')
-    if tree.BULLETIN() is not None:
-        sql.append('numero')
-    if tree.MOT() or tree.WHEN():
-        sql.append('WHERE')
-    if tree.MOT() and tree.ps:
-        sql += 'mot LIKE'.split(' ')
-        if tree.ps.par1 is not None:
-            sql.append("'%" + tree.ps.par1.a.text + "%'")
-        if tree.ps.par2 is not None:
-            conj = str(tree.ps.CONJ()[0])
-            if conj == 'et':
-                sql.append('AND')
-            if conj == 'ou':
-                sql.append('OR')
-            sql.append("'%" + tree.ps.par2.a.text + "%'")
-    if tree.WHEN():
-        if tree.te.year_ is not None:
-            digits = [tree.te.year_.digit1.text, tree.te.year_.digit2.text, tree.te.year_.digit3.text,
-                      tree.te.year_.digit4.text]
-            year = int("".join(digits))
-            sql.append('year(annee)=%d' % year)
-            # TODO: add other time of date
-    sql.append(';')
-
-    return ' '.join(sql)
-
 
 def convert_natural_to_sql(request_natural: str):
     input_stream = InputStream(request_natural)
@@ -46,8 +12,12 @@ def convert_natural_to_sql(request_natural: str):
     stream = CommonTokenStream(lexer)
     parser = GrammaireSQLParser(stream)
     tree = parser.requete()
-    sql_request = make_sql_request(tree)
-    return sql_request
+
+    sql_listener = GrammaireSQLListener()
+    walker = ParseTreeWalker()
+    walker.walk(sql_listener, tree)
+
+    return sql_listener.sql_request
 
 
 def apply_stoplist(stoplist, s):

@@ -5,11 +5,11 @@ listrequete:
     ;
 
 requete:
-    (SELECT|COUNT) (ARTICLE | BULLETIN) (MOT ps = params)* (WHEN te = time_expression)*
+    (SELECT|COUNT) (ARTICLE | BULLETIN) ((MOT ps = params) | (WHEN te = time_expression))*
     ;
 
 params:
-    par1 = param (CONJ par2 = param)*
+    par1 = param (conj = CONJ par2 = param)*
     ;
 
 param:
