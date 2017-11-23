@@ -43,7 +43,18 @@ Détails sur l'algorithme du pre-parser, l'`Organisateur`:
 ## Grammaire Antlr
 ### Exemple d'arbre
 vouloir article contenir plastique et universite parution 2015
+
 ![alt text](./documentation/request_example_tree.png)
 
 
+# Questions:
+On a dit que:
 
+Dans "Je `veux` article contenir `afficheur`", `veux` sera interprété comme un mot de la structure signifiant `vouloir`, tandis que `afficheur` venant après l'action de `vouloir` sera interprété comme un paramètre.
+
+Mais que faire pour:
+
+Je `veux` article `parlant` de toto
+`parlant` vient après `veux`, et donc sera considéré comme paramètre, cherché dans le lexique où il ne figure pas.
+
+Comment intégrer tous les types de mot participant à la structure ?

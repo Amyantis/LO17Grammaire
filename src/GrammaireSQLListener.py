@@ -135,7 +135,9 @@ class GrammaireSQLListener(ParseTreeListener):
 
 
 if __name__ == '__main__':
+    # testing the Listener alone:
     request_natural = "combien article parution 2017 contenir nobel et alimentation"
+
     input_stream = InputStream(request_natural)
     lexer = GrammaireSQLLexer(input_stream)
     stream = CommonTokenStream(lexer)

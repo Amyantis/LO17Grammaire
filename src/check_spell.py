@@ -1,10 +1,15 @@
+from src import logger
+
+
 class Lexicon():
-    def __init__(self, lines):
+    def __init__(self, lines=None):
         # word => lemma
+        if lines is None:
+            lines = Lexicon.get_lexicon()
         self.lexicon = {line[0].strip(): line[1].strip() for line in lines}
         self.proximity_threshold = 80
         self.proximity_letters_threshold = 3
-        self.levenshtein_distance_threshold = 2
+        self.levenshtein_distance_threshold = 1
 
     def get(self, word):
         lemma = self.lexicon.get(word.lower())
@@ -17,7 +22,7 @@ class Lexicon():
             candidates = \
                 Lexicon.filter_candidates(self.proximity_threshold, candidates)
             if len(candidates) > 0:
-                print("Used proximity percentage for", word)
+                logger.info("Used proximity percentage for `%s`", word)
                 return candidates
 
             # compute levenshtein distance
@@ -29,7 +34,7 @@ class Lexicon():
             candidates = \
                 Lexicon.filter_candidates(self.levenshtein_distance_threshold, candidates, False)
             if len(candidates) > 0:
-                print("Used levenshtein for", word)
+                logger.info("Used levenshtein for `%s`", word)
                 return candidates
 
         return lemma
@@ -92,15 +97,15 @@ class Lexicon():
                 lemmas.append(lemma_)
         return lemmas
 
-
-def get_lexicon():
-    with open('ressources/filtre_corpus.txt') as fdesc:
-        file = fdesc.read()
-    return [line.split('\t') for line in file.split('\n') if len(line.split('\t')) == 2]
+    @staticmethod
+    def get_lexicon():
+        with open('../ressources/filtre_corpus.txt') as fdesc:
+            file = fdesc.read()
+        return [line.split('\t') for line in file.split('\n') if len(line.split('\t')) == 2]
 
 
 if __name__ == '__main__':
-    lexicon = Lexicon(get_lexicon())
+    lexicon = Lexicon()
     word = None
     while word != '':
         word = input().strip()
