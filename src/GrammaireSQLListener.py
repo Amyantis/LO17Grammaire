@@ -32,10 +32,10 @@ class GrammaireSQLListener(ParseTreeListener):
         # if ctx.BULLETIN() is not None:
         #     self.request_tree.append("bulletin")
 
-        self.request_tree.append("FROM titreresume")
+        self.request_tree.append("FROM titre")
 
         if ctx.WHEN() is not None:
-            self.request_tree.append(", date")
+            self.request_tree.append(" LEFT JOIN date ON titre.fichier = date.fichier")
 
         if ctx.MOT() is not None or ctx.WHEN() is not None:
             self.request_tree.append("WHERE")
@@ -50,7 +50,7 @@ class GrammaireSQLListener(ParseTreeListener):
     # Enter a parse tree produced by GrammaireSQLParser#params.
     def enterParams(self, ctx: GrammaireSQLParser.ParamsContext):
         params_tree = []
-        params_tree.append("titreresume.mot LIKE '%{}%'".format(ctx.par1.a.text))
+        params_tree.append("titre.mot LIKE '%{}%'".format(ctx.par1.a.text))
 
         if ctx.par2 is not None:
             conj = ctx.conj.text

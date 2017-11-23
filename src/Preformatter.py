@@ -1,5 +1,5 @@
 from src import logger
-from src.check_spell import Lexicon
+from src.Lexicon import Lexicon
 
 
 class StopList:
@@ -11,7 +11,7 @@ class StopList:
 
     @staticmethod
     def get_stoplist():
-        with open('../ressources/stoplist.txt') as fdesc:
+        with open('ressources/stoplist.txt') as fdesc:
             stoplist = set(fdesc.read().split('\n'))
         return stoplist
 
@@ -40,6 +40,7 @@ class Preformatter:
         return pref_req
 
     def clean_expression(self, natural_request):
+        # TODO: make categories for structure parts
         has_found_structure_word = False
 
         l = []
@@ -77,7 +78,7 @@ class Preformatter:
 
     @staticmethod
     def get_request_struct_dict():
-        with open("../ressources/structure_lexique.txt") as fdesc:
+        with open("ressources/structure_lexique.txt") as fdesc:
             structure_words = [line.split(" ") for line in fdesc.readlines()]
             d = {}
             for list_of_words in structure_words:
@@ -87,7 +88,7 @@ class Preformatter:
 
     @staticmethod
     def get_request_param_dict():
-        with open('../ressources/known_param_lexique.txt') as fdesc:
+        with open('ressources/known_param_lexique.txt') as fdesc:
             known_param = set(fdesc.read().split('\n'))
         return known_param
 
