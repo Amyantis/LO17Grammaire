@@ -88,7 +88,7 @@ class Preformatter:
     @staticmethod
     def get_request_struct_dict():
         with open("../ressources/structure_lexique.txt") as fdesc:
-            structure_words = [line.split(" ") for line in fdesc.readlines()]
+            structure_words = [line.replace("\n", "").split(" ") for line in fdesc.readlines()]
             d = {}
             for list_of_words in structure_words:
                 for word in list_of_words:
@@ -105,7 +105,13 @@ class Preformatter:
 if __name__ == "__main__":
     # Testing the Preformatter with some requests
     requests = [
-        "Articles parlant d'innovation."
+        # "Afficher les articles plus vieux que 2013.",
+        # "Articles parlant d'innovation.",
+        # "Donner les articles parus en 2011.",
+        # "Donnez moi les articles sur le diabète",
+        "Je veux les articles qui parlent de « l’innovation ».",
+        "Je veux les articles qui parlent de Zuckerberg.",
+        "Je veux les articles qui ont été écrits en mai 2011.",
     ]
 
     preformatter = Preformatter()
