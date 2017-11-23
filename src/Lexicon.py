@@ -14,7 +14,7 @@ class Lexicon():
     def get(self, word):
         lemma = self.lexicon.get(word.lower())
 
-        if lemma is None:
+        if lemma is None and len(word) > 2:
             # compute proximities
             candidates = \
                 {lemma_: self.proximity(word, lexicon_word)
@@ -99,7 +99,7 @@ class Lexicon():
 
     @staticmethod
     def get_lexicon():
-        with open('ressources/filtre_corpus.txt') as fdesc:
+        with open('../ressources/filtre_corpus.txt') as fdesc:
             file = fdesc.read()
         return [line.split('\t') for line in file.split('\n') if len(line.split('\t')) == 2]
 

@@ -11,7 +11,7 @@ class StopList:
 
     @staticmethod
     def get_stoplist():
-        with open('ressources/stoplist.txt') as fdesc:
+        with open('../ressources/stoplist.txt') as fdesc:
             stoplist = set(fdesc.read().split('\n'))
         return stoplist
 
@@ -30,6 +30,10 @@ class Preformatter:
         pref_req = natural_request.lower()
         pref_req = " ".join(pref_req.split("'"))
         pref_req = " ".join(pref_req.split("’"))
+        pref_req = " ".join(pref_req.split("."))
+        pref_req = " ".join(pref_req.split("?"))
+        pref_req = " ".join(pref_req.split("!"))
+        pref_req.strip()
 
         pref_req = self.stoplist.apply_stoplist(pref_req)
         logger.debug("Stoplisted natural input request:\n\t%s", pref_req)
@@ -40,21 +44,26 @@ class Preformatter:
         return pref_req
 
     def clean_expression(self, natural_request):
-        # TODO: make categories for structure parts
-        has_found_structure_word = False
+        has_found_structure_word = set()
 
         l = []
         for word in natural_request.split(" "):
             if word in self.request_param_dict:
                 continue
-            if not has_found_structure_word and word in self.request_struct_dict:
-                word = self.request_struct_dict[word]
-                has_found_structure_word = True
+
+            if word in self.request_struct_dict:
+                word_found = self.request_struct_dict[word]
+                if word_found not in has_found_structure_word:
+                    word = word_found
+                    has_found_structure_word.add(word_found)
             else:
                 word = self.lemmatisate_word(word)
-                if not has_found_structure_word and word in self.request_struct_dict:
-                    word = self.request_struct_dict[word]
-                    has_found_structure_word = True
+
+                if word in self.request_struct_dict:
+                    word_found = self.request_struct_dict[word]
+                    if word_found not in has_found_structure_word:
+                        word = word_found
+                        has_found_structure_word.add(word)
             l.append(word)
 
         return " ".join(l)
@@ -78,7 +87,7 @@ class Preformatter:
 
     @staticmethod
     def get_request_struct_dict():
-        with open("ressources/structure_lexique.txt") as fdesc:
+        with open("../ressources/structure_lexique.txt") as fdesc:
             structure_words = [line.split(" ") for line in fdesc.readlines()]
             d = {}
             for list_of_words in structure_words:
@@ -88,7 +97,7 @@ class Preformatter:
 
     @staticmethod
     def get_request_param_dict():
-        with open('ressources/known_param_lexique.txt') as fdesc:
+        with open('../ressources/known_param_lexique.txt') as fdesc:
             known_param = set(fdesc.read().split('\n'))
         return known_param
 
@@ -96,10 +105,7 @@ class Preformatter:
 if __name__ == "__main__":
     # Testing the Preformatter with some requests
     requests = [
-        "Afficher les articles plus vieux que 2013.",
-        "Articles parlant d'innovation.",
-        "Donner les articles parus en 2011.",
-        "Donnez moi les articles sur le diabète",
+        "Articles parlant d'innovation."
     ]
 
     preformatter = Preformatter()

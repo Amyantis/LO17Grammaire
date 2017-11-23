@@ -34,10 +34,10 @@ class GrammaireSQLListener(ParseTreeListener):
 
         self.request_tree.append("FROM titre")
 
-        if ctx.WHEN() is not None:
+        if ctx.WHEN() is not None and ctx.WHEN() != []:
             self.request_tree.append(" LEFT JOIN date ON titre.fichier = date.fichier")
 
-        if ctx.MOT() is not None or ctx.WHEN() is not None:
+        if ctx.MOT() != [] or ctx.WHEN() != []:
             self.request_tree.append("WHERE")
             ctx.subtree = []
             # self.request_tree.append(ctx.subtree)
