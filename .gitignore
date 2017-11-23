@@ -106,3 +106,4 @@ venv.bak/
 /gen/
 /.ipynb_checkpoints/
 .idea
+/success.txt

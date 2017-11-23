@@ -12,3 +12,17 @@ SELECT DISTINCT * FROM titre;
 --Voir bulletin
 SELECT DISTINCT * FROM numero;
 
+SELECT DISTINCT *
+FROM titre
+  LEFT JOIN date ON titre.fichier = date.fichier
+WHERE date.annee = '2011';
+
+SELECT DISTINCT *
+FROM titre
+  LEFT JOIN date ON titre.fichier = date.fichier;
+
+
+SELECT COUNT(*)
+FROM titre
+  LEFT JOIN date ON titre.fichier = date.fichier
+WHERE date.annee = '2013' AND titre.mot LIKE '%cancer%'

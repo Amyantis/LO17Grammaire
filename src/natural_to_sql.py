@@ -22,17 +22,41 @@ def convert_natural_to_sql(request_natural: str):
 
 
 def main():
+    # Small too to try natural requests
     preformatter = Preformatter()
     db = DataBase()
 
     while True:
-        request_natural = input("Question en langage naturel:")
+        request_natural = input("Question en langage naturel:\n")
         preformatted_request = preformatter.preformat(request_natural)
         sql = convert_natural_to_sql(preformatted_request)
         print(sql)
-        if bool(input("Apply query?")):
-            db.execute(sql)
 
+        s = None
+        while s not in {'yes', 'no'}:
+            s = input("Apply query? (yes|no)\n").strip()
 
+        if s == 'yes':
+            i = 0
+            for row in db.execute(sql):
+                print(row)
+                i += 1
+                if i > 3:
+                    print("...")
+                    break
+            if i == 0:
+                "Nothing found!"
+                continue
+
+            s = None
+            while s not in {'yes', 'no'}:
+                s = input("Are you happy with that result? (yes|no)\n").strip()
+
+            if s == 'yes':
+                with open("success.txt", "a+") as fdesc:
+                    fdesc.write(request_natural)
+                    fdesc.write("\n")
+                    fdesc.write(sql)
+                    fdesc.write("\n")
 if __name__ == '__main__':
     main()

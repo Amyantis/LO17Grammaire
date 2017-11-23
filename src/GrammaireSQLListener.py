@@ -58,7 +58,7 @@ class GrammaireSQLListener(ParseTreeListener):
                 params_tree.append('AND')
             if conj == 'or':
                 params_tree.append('OR')
-            params_tree.append("titreresume.mot LIKE '%{}%'".format(ctx.par2.a.text))
+            params_tree.append("titre.mot LIKE '%{}%'".format(ctx.par2.a.text))
         ctx.parentCtx.subtree.append(" ".join(params_tree))
 
     # Exit a parse tree produced by GrammaireSQLParser#params.
@@ -81,7 +81,7 @@ class GrammaireSQLListener(ParseTreeListener):
             d3 = ctx.year_.digit3.text
             d4 = ctx.year_.digit4.text
             year = int("".join([d1, d2, d3, d4]))
-            ctx.parentCtx.subtree.append("".join(["date.annee = %d" % year]))
+            ctx.parentCtx.subtree.append("".join(["date.annee = '%d'" % year]))
 
         if ctx.date_ is not None:
             pass
@@ -136,6 +136,7 @@ class GrammaireSQLListener(ParseTreeListener):
 
 if __name__ == '__main__':
     # testing the Listener alone:
+    request_natural = "combien article parution 2017 contenir nobel et alimentation"
     request_natural = "combien article parution 2017 contenir nobel et alimentation"
 
     input_stream = InputStream(request_natural)

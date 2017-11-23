@@ -47,14 +47,13 @@ vouloir article contenir plastique et universite parution 2015
 ![alt text](./documentation/request_example_tree.png)
 
 
-# Questions:
-On a dit que:
+# Exemples de requête qui fonctionnent:
+```sql
+-- Je veux les articles qui parlent de Casablanca.
+SELECT DISTINCT * FROM titre WHERE titre.mot LIKE '%casablanca%'
+-- Affiche les article qui contiennent Paris
+SELECT DISTINCT * FROM titre WHERE titre.mot LIKE '%paris%'
+-- Combien d'articles sont parus en 2013 et contiennent cancer ?
+SELECT COUNT(*) FROM titre  LEFT JOIN date ON titre.fichier = date.fichier WHERE date.annee = '2013' AND titre.mot LIKE '%cancer%'
+```
 
-Dans "Je `veux` article contenir `afficheur`", `veux` sera interprété comme un mot de la structure signifiant `vouloir`, tandis que `afficheur` venant après l'action de `vouloir` sera interprété comme un paramètre.
-
-Mais que faire pour:
-
-Je `veux` article `parlant` de toto
-`parlant` vient après `veux`, et donc sera considéré comme paramètre, cherché dans le lexique où il ne figure pas.
-
-Comment intégrer tous les types de mot participant à la structure ?
