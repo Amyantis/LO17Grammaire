@@ -10,11 +10,16 @@ function getSQLRequest(naturalRequest) {
     });
 
     ajaxRequest.done((data) => {
-        $("#sql").val(data);
+        const parsedData = JSON.parse(data);
+        $("#sql").val(parsedData["sql_request"]);
 
         const dt = new Date();
         const time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-        $("#sql_info").text("Heure de génération de la requête: " + time);
+        const info =
+            "Heure de génération de la requête: " + time + "<br>" +
+            "Requête préparsée: " + "<br>" +
+            parsedData["preformatted_request"];
+        $("#sql_info").html(info);
 
         $("#sql_info").show();
         $("#sql_form").show();
@@ -94,14 +99,14 @@ $('#natural_request_form').submit((event) => {
 
 $('#sql_form').submit((event) => {
     event.preventDefault();
-    $("#error_sql_form").text();
+    $("#error_sql_form").text("");
     $("#error_sql_form").hide();
-    $("#results_info").text();
+    $("#results_info").text("");
     $("#results_info").hide();
 
 
-    $("#results_count").html();
-    $("#results_table").html();
+    $("#results_count").html("");
+    $("#results_table").html("");
 
     applySQLRequest($("#sql").val());
 });

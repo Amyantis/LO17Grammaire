@@ -70,3 +70,6 @@ SELECT DISTINCT * FROM titre WHERE titre.mot LIKE '%paris%'
 SELECT COUNT(*) FROM titre  LEFT JOIN date ON titre.fichier = date.fichier WHERE date.annee = '2013' AND titre.mot LIKE '%cancer%'
 ```
 
+
+# TODO:
+* Gérer les mots non trouvés dans le lexique dans la webapp. Les proposer pour validation au client.
