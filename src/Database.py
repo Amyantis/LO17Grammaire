@@ -22,7 +22,7 @@ class DataBase:
 if __name__ == '__main__':
     # Test database connection
     db = DataBase()
-    query = "SELECT COUNT(*) FROM titre  LEFT JOIN date ON titre.fichier = date.fichier " \
+    query = "SELECT * FROM titre  LEFT JOIN date ON titre.fichier = date.fichier " \
             "WHERE date.annee = '2011'"
     for row in db.execute(query):
         print(row)

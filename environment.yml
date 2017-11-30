@@ -3,8 +3,9 @@ channels:
 - defaults
 dependencies:
 - pip=9.0.1=py36_1
-- psycopg2=2.7.1=py36_0
 - python=3.6.2=0
 - pip:
   - antlr4-python3-runtime==4.5.3
+  - flask==0.12.2
+  - flask-cors==3.0.3
 

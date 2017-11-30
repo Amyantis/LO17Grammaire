@@ -6,11 +6,18 @@ Generate `antlr4` classes from our grammar:
 antlr4 -o gen -listener -visitor -Dlanguage=Python3 GrammaireSQL.g4
 ```
 
-Create simlink:
+If symlink doesn't exist, create symlink:
 ```bash
 cd src
 ln -s ../ressources .
 ```
+
+## Webapp
+Start Flask app:
+```
+python webapp/Flask.py
+```
+Then, open `webapp/index.html` in a browser.
 
 # Description des objectifs
 Gérer des requêtes portant sur les articles, éventuellement avec des contraintes de contenu et ou de temporalité.

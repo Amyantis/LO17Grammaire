@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Consultation bulletins</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div>
+        <h1>Générer une requête SQL à partir du langage naturel</h1>
+        <form id="natural_request_form">
+            <div class="form-group">
+                <label for="natural_request">Requête naturelle:</label>
+                <input id="natural_request" type="text" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-default">Go</button>
+        </form>
+        <div class="alert alert-danger" id="error_natural_request_form">
+        </div>
+    </div>
+
+    <div>
+        <h1>Exécuter une requête SQL</h1>
+        <div class="alert alert-info" id="sql_info">
+        </div>
+        <form id="sql_form">
+            <div class="form-group">
+                <label for="sql">Requête SQL:</label>
+                <input id="sql" type="text" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-default">Go</button>
+        </form>
+        <div class="alert alert-danger" id="error_sql_form">
+        </div>
+    </div>
+
+    <div>
+        <h1>Résultats</h1>
+        <div class="alert alert-info" id="results_info">
+        </div>
+        <h2>Nombre de résultats</h2>
+        <div id="results_count"></div>
+        <h2>Résutats</h2>
+        <table style="width:100%">
+            <tr>
+                <th>Mot clé</th>
+                <th>Rubrique</th>
+                <th>Numéro</th>
+                <th>Date</th>
+                <th>Lien</th>
+            </tr>
+            <tbody id="results_table"></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="main.js" type="application/javascript"></script>
+</body>
+</html>
