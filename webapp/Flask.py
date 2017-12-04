@@ -16,11 +16,12 @@ def natural():
     natural_request = request.form['natural_request']
 
     preformatter = Preformatter()
-    preformatted_request = preformatter.preformat(natural_request)
+    preformatted_request, lemmas_choices = preformatter.preformat(natural_request)
     sql = convert_natural_to_sql(preformatted_request)
     return json.dumps({
         "sql_request": sql,
-        "preformatted_request": preformatted_request
+        "preformatted_request": preformatted_request,
+        "lemmas_choices": lemmas_choices
     })
 
 

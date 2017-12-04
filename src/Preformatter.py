@@ -38,13 +38,15 @@ class Preformatter:
         pref_req = self.stoplist.apply_stoplist(pref_req)
         logger.debug("Stoplisted natural input request:\n\t%s", pref_req)
 
-        pref_req = self.clean_expression(pref_req)
+        pref_req, lemmas_choices = self.clean_expression(pref_req)
         logger.debug("Stoplisted and lemmatisated natural input request:\n\t%s", pref_req)
 
-        return pref_req
+        return pref_req, lemmas_choices
 
     def clean_expression(self, natural_request):
         has_found_structure_word = set()
+
+        lemmas_choices = []
 
         l = []
         for word in natural_request.split(" "):
@@ -58,6 +60,9 @@ class Preformatter:
                     has_found_structure_word.add(word_found)
             else:
                 word = self.lemmatisate_word(word)
+                if isinstance(word, list):
+                    lemmas_choices.append(word)
+                    word = word[0]
 
                 if word in self.request_struct_dict:
                     word_found = self.request_struct_dict[word]
@@ -66,13 +71,13 @@ class Preformatter:
                         has_found_structure_word.add(word)
             l.append(word)
 
-        return " ".join(l)
+        return " ".join(l), lemmas_choices
 
-    def lemmatisate_word(self, word):
+    def lemmatisate_word(self, word, choice=False):
         lemma = self.lexicon.get(word)
         if lemma is None:
             return word
-        if isinstance(lemma, list):
+        if choice and isinstance(lemma, list):
             # let the user choose the lemma he wants
             while True:
                 s = "Select a word in the following list of lemmas for word %s:\n\t%s\n"

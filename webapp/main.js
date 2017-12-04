@@ -18,7 +18,9 @@ function getSQLRequest(naturalRequest) {
         const info =
             "Heure de génération de la requête: " + time + "<br>" +
             "Requête préparsée: " + "<br>" +
-            parsedData["preformatted_request"];
+            parsedData["preformatted_request"] + "<br>" +
+            "Choix de lemmes alternatifs: " + "<br>" +
+            parsedData["lemmas_choices"];
         $("#sql_info").html(info);
 
         $("#sql_info").show();
@@ -56,12 +58,13 @@ function applySQLRequest(sqlRequest) {
         } else {
             $("#results_count").html(rows.length);
             for (row of rows) {
+                const strDate = row.length > 4 ? row[4] + '/' + row[5] + '/' + row[6] : "";
                 $("#results_table").append(
                     '<tr>' +
                     '<td>' + row[0] + '</td>' +
                     '<td>' + row[1] + '</td>' +
                     '<td>' + row[3] + '</td>' +
-                    '<td>' + row[4] + '/' + row[5] + '/' + row[6] + '</td>' +
+                    '<td>' + strDate + '</td>' +
                     '<td><a href="http://www4.utc.fr/~lo17/TELECHARGE/BULLETINS/' + row[2] + '"  target="_blank">' + row[2] + '</a></td>' +
                     '</tr>'
                 );
