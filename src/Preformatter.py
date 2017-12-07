@@ -28,11 +28,12 @@ class Preformatter:
         logger.debug("Natural input request:\n\t%s", natural_request)
 
         pref_req = natural_request.lower()
-        pref_req = " ".join(pref_req.split("'"))
-        pref_req = " ".join(pref_req.split("’"))
-        pref_req = " ".join(pref_req.split("."))
-        pref_req = " ".join(pref_req.split("?"))
-        pref_req = " ".join(pref_req.split("!"))
+        pref_req = pref_req.replace("'", " ")
+        pref_req = pref_req.replace("’", " ")
+        pref_req = pref_req.replace(".", " ")
+        pref_req = pref_req.replace("?", " ")
+        pref_req = pref_req.replace("!", " ")
+        pref_req = pref_req.replace("-", " ")
         pref_req.strip()
 
         pref_req = self.stoplist.apply_stoplist(pref_req)

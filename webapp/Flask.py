@@ -10,7 +10,6 @@ from src.natural_to_sql import convert_natural_to_sql
 APP = Flask(__name__)
 CORS = CORS(APP)
 
-
 @APP.route("/natural", methods=['POST'])
 def natural():
     natural_request = request.form['natural_request']

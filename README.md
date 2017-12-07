@@ -6,12 +6,6 @@ Generate `antlr4` classes from our grammar:
 antlr4 -o gen -listener -visitor -Dlanguage=Python3 GrammaireSQL.g4
 ```
 
-If symlink doesn't exist, create symlink:
-```bash
-cd src
-ln -s ../ressources .
-```
-
 ## Webapp
 Start Flask app:
 ```
@@ -63,13 +57,19 @@ vouloir article contenir plastique et universite parution 2015
 # Exemples de requête qui fonctionnent:
 ```sql
 -- Je veux les articles qui parlent de Casablanca.
-SELECT DISTINCT * FROM titre WHERE titre.mot LIKE '%casablanca%'
+SELECT DISTINCT * FROM titre WHERE titre.mot LIKE '%casablanca%';
 -- Affiche les article qui contiennent Paris
-SELECT DISTINCT * FROM titre WHERE titre.mot LIKE '%paris%'
+SELECT DISTINCT * FROM titre WHERE titre.mot LIKE '%paris%';
 -- Combien d'articles sont parus en 2013 et contiennent cancer ?
-SELECT COUNT(*) FROM titre  LEFT JOIN date ON titre.fichier = date.fichier WHERE date.annee = '2013' AND titre.mot LIKE '%cancer%'
+SELECT COUNT(*) FROM titre  LEFT JOIN date ON titre.fichier = date.fichier WHERE date.annee = '2013' AND titre.mot LIKE '%cancer%';
 ```
 
 
 # TODO:
 * Gérer les mots non trouvés dans le lexique dans la webapp. Les proposer pour validation au client.
+* Comment intégrer le type de résultats souhaités (liste d'article, liste de rubriques, liste d'auteurs):
+Exemple :
+- Je souhaite avoir le titre des articles parlant de technologie.
+- Je veux des contacts pour Airbus
+- Je veux les articles qui parlent de « l’innovation ».
+=> 3 types de résultats différents
