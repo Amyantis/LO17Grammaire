@@ -18,7 +18,7 @@ def convert_natural_to_sql(request_natural: str):
     walker = ParseTreeWalker()
     walker.walk(sql_listener, tree)
 
-    return sql_listener.sql_request
+    return sql_listener.sql_request_tree.sql_request()
 
 
 def main():

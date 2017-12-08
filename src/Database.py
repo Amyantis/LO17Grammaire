@@ -15,7 +15,15 @@ class DataBase:
             yield cursor.fetchone()
         else:
             for row in cursor:
-                yield tuple(map(str.strip, row))
+                l = []
+                for m in row:
+                    if isinstance(m, str):
+                        l.append(m.strip())
+                    elif m is None:
+                        l.append("")
+                    else:
+                        l.append(m)
+                yield tuple(l)
         cursor.close()
 
 

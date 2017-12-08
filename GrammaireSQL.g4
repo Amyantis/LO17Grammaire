@@ -5,7 +5,7 @@ listrequete:
     ;
 
 requete:
-    (SELECT|COUNT) (ARTICLE | BULLETIN) ((MOT ps = params) | (WHEN te = time_expression))*
+    (SELECT|COUNT) (type_ = TYPE) ((MOT ps = params) | (WHEN te = time_expression))*
     ;
 
 params:
@@ -44,13 +44,13 @@ day:
 // Lexer rules
 SELECT: 'vouloir';
 COUNT: 'combien';
-ARTICLE: 'article' | 'articles';
-BULLETIN: 'bulletin';
+TYPE: 'article' | 'rubrique' | 'contact';
+
 CONJ: 'et' | 'ou';
 END: '.' | '\n';
 MOT: 'mot' | 'contenir' | 'parler' | 'parlent';
 
-WHEN: 'parution';
+WHEN: 'parution' | 'en';
 DIGIT: [0-9];
 DATE_SEPARATOR: ('/' | '-');
 MONTH: 'janvier' | 'fevrier' | 'mars' | 'avril' | 'mai' | 'juin' | 'juillet' | 'aout' | 'septembre' | 'octobre' | 'novembre' | 'decembre';
