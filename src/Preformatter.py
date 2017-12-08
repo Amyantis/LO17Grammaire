@@ -47,30 +47,35 @@ class Preformatter:
     def clean_expression(self, natural_request):
         has_found_structure_word = set()
 
-        lemmas_choices = []
+        lemmas_choices = {}
 
         l = []
         for word in natural_request.split(" "):
-            if word in self.request_param_dict:
+            tmp_word = word
+
+            if tmp_word in self.request_param_dict:
                 continue
 
-            if word in self.request_struct_dict:
-                word_found = self.request_struct_dict[word]
+            if tmp_word in self.request_struct_dict:
+                word_found = self.request_struct_dict[tmp_word]
                 if word_found not in has_found_structure_word:
-                    word = word_found
+                    tmp_word = word_found
                     has_found_structure_word.add(word_found)
             else:
-                word = self.lemmatisate_word(word)
-                if isinstance(word, list):
-                    lemmas_choices.append(word)
-                    word = word[0]
+                tmp_word = self.lemmatisate_word(tmp_word)
+                if isinstance(tmp_word, list):
+                    if word in tmp_word:
+                        lemmas_choices[word].append(tmp_word)
+                    else:
+                        lemmas_choices[word] = tmp_word
+                    tmp_word = tmp_word[0]
 
-                if word in self.request_struct_dict:
-                    word_found = self.request_struct_dict[word]
+                if tmp_word in self.request_struct_dict:
+                    word_found = self.request_struct_dict[tmp_word]
                     if word_found not in has_found_structure_word:
-                        word = word_found
-                        has_found_structure_word.add(word)
-            l.append(word)
+                        tmp_word = word_found
+                        has_found_structure_word.add(tmp_word)
+            l.append(tmp_word)
 
         return " ".join(l), lemmas_choices
 

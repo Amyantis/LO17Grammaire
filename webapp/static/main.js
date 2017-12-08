@@ -15,6 +15,7 @@ function getSQLRequest(naturalRequest) {
 
         const dt = new Date();
         const time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+        // TODO: improve lemmas_choices (note Object.keys(parsedData["lemmas_choices"]).length)
         const info =
             "Heure de génération de la requête: " + time + "<br>" +
             "Requête préparsée: " + "<br>" +
@@ -52,23 +53,39 @@ function applySQLRequest(sqlRequest) {
         $("#results_info").text("Heure de génération de la requête: " + time);
         $("#results_info").show();
 
-        const rows = JSON.parse(data);
-        if (rows.length === 1 && rows[0].length === 1) {
+        const res = JSON.parse(data);
+        const rows = res["rows"];
+
+        if (!('colnames' in res)) {
             $("#results_count").html(rows[0])
         } else {
             $("#results_count").html(rows.length);
-            for (row of rows) {
-                const strDate = row.length > 4 ? row[4] + '/' + row[5] + '/' + row[6] : "";
-                $("#results_table").append(
-                    '<tr>' +
-                    '<td>' + row[0] + '</td>' +
-                    '<td>' + row[1] + '</td>' +
-                    '<td>' + row[3] + '</td>' +
-                    '<td>' + strDate + '</td>' +
-                    '<td><a href="http://www4.utc.fr/~lo17/TELECHARGE/BULLETINS/' + row[2] + '"  target="_blank">' + row[2] + '</a></td>' +
-                    '</tr>'
-                );
+
+            const colnames = res["colnames"];
+
+            let header = '<tr>';
+            for (const colname of colnames) {
+                header += '<th>';
+                header += colname;
+                header += '</th>';
             }
+            header += '</tr>';
+
+            let tbody = '';
+            for (const row of rows) {
+                tbody += '<tr>';
+                for (const cell of row) {
+                    tbody += '<td>';
+                    if (cell.endsWith('.htm') || cell.endsWith('.html')) {
+                        tbody += '<a href="http://www4.utc.fr/~lo17/TELECHARGE/BULLETINS/' + cell + '"  target="_blank">' + cell + '</a>'
+                    } else {
+                        tbody += cell;
+                    }
+                    tbody += '</td>';
+                }
+                tbody += '</tr>';
+            }
+            $("#results_table").html(header + tbody)
         }
     });
 

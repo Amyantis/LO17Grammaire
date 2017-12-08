@@ -4,16 +4,21 @@ import psycopg2
 class DataBase:
     def __init__(self):
         self.connect = psycopg2.connect(host="tuxa.sme.utc", database="dblo17", user="lo17xxx", password="dblo17")
+        self.colnames = None
 
     def __del__(self):
         self.connect.close()
 
     def execute(self, query):
+        self.colnames = None
         cursor = self.connect.cursor()
         cursor.execute(query)
+
         if "COUNT" in query.upper():
             yield cursor.fetchone()
         else:
+            self.colnames = [desc[0] for desc in cursor.description]
+
             for row in cursor:
                 l = []
                 for m in row:
