@@ -6,7 +6,7 @@ from gen.GrammaireSQLLexer import GrammaireSQLLexer
 from gen.GrammaireSQLParser import GrammaireSQLParser
 
 
-class LeftJoin:
+class LeftJoinElement:
     def __init__(self, table, field):
         self.table = table
         self.field = field
@@ -26,8 +26,8 @@ class SQLRequestTree:
         self.request_type = None
         self.columns = []
         self.tables = []
-        self.left_join_commands = []
-        self.where_attributes = []
+        self.left_join_elements = []
+        self.where_elements = []
 
     def sql_request(self):
         columns_set = set()
@@ -48,14 +48,14 @@ class SQLRequestTree:
         columns = ["%s AS %s" % (column, column.split(".")[1])
                    for column in columns]
 
-        if 'date' in {left_join_command.table for left_join_command in self.left_join_commands}:
+        if 'date' in {left_join_command.table for left_join_command in self.left_join_elements}:
             columns.append("CONCAT(TRIM(date.jour), ' / ', TRIM(date.mois), ' / ', TRIM(date.annee)) AS date")
 
         if self.request_type is not None and "COUNT" in self.request_type:
             columns = []
 
-        if len(self.where_attributes) > 0:
-            where = ["WHERE", " AND ".join(self.where_attributes)]
+        if len(self.where_elements) > 0:
+            where = ["WHERE", " AND ".join(self.where_elements)]
         else:
             where = []
 
@@ -75,7 +75,7 @@ class SQLRequestTree:
         return " ".join(args)
 
     def format_left_join_commands(self):
-        sql = [left_join.format_left_join(self.columns) for left_join in self.left_join_commands]
+        sql = [left_join.format_left_join(self.columns) for left_join in self.left_join_elements]
         return " ".join(sql).split(" ")
 
 
@@ -129,13 +129,13 @@ class GrammaireSQLListener(ParseTreeListener):
         self.sql_request_tree.columns = columns
 
         if ctx.WHEN():
-            left_join = LeftJoin('date', 'fichier')
-            self.sql_request_tree.left_join_commands.append(left_join)
+            left_join = LeftJoinElement('date', 'fichier')
+            self.sql_request_tree.left_join_elements.append(left_join)
 
         if ctx.MOT():
             if "texte.mot" not in self.sql_request_tree.columns:
-                left_join = LeftJoin('texte', 'fichier')
-                self.sql_request_tree.left_join_commands.append(left_join)
+                left_join = LeftJoinElement('texte', 'fichier')
+                self.sql_request_tree.left_join_elements.append(left_join)
 
     # Exit a parse tree produced by GrammaireSQLParser#requete.
     def exitRequete(self, ctx: GrammaireSQLParser.RequeteContext):
@@ -153,7 +153,7 @@ class GrammaireSQLListener(ParseTreeListener):
                 s.append('OR')
             s.append("texte.mot LIKE '%{}%'".format(ctx.par2.a.text))
 
-        self.sql_request_tree.where_attributes.append(" ".join(s))
+        self.sql_request_tree.where_elements.append(" ".join(s))
 
     # Exit a parse tree produced by GrammaireSQLParser#params.
     def exitParams(self, ctx: GrammaireSQLParser.ParamsContext):
@@ -175,7 +175,7 @@ class GrammaireSQLListener(ParseTreeListener):
             d3 = ctx.year_.digit3.text
             d4 = ctx.year_.digit4.text
             year = int("".join([d1, d2, d3, d4]))
-            self.sql_request_tree.where_attributes.append("".join(["date.annee = '%d'" % year]))
+            self.sql_request_tree.where_elements.append("".join(["date.annee = '%d'" % year]))
 
         if ctx.date_ is not None:
             pass

@@ -1,0 +1,31 @@
+@startuml
+
+SQLRequestTree : request_type : {COUNT | DISTINCT}
+SQLRequestTree : columns : ColumnElement[]
+SQLRequestTree : tables : String[]
+SQLRequestTree : left_join_elements : LeftJoinElement[]
+SQLRequestTree : where_elements : WhereElement[]
+SQLRequestTree : sql_request() : String
+SQLRequestTree : - make_columns_unique()
+SQLRequestTree : - simplify()
+
+LeftJoinElement : table : String
+LeftJoinElement : field : String
+LeftJoinElement : format()
+
+ColumnElement : table : String
+ColumnElement : field : String
+ColumnElement : alias : String
+ColumnElement : format()
+
+WhereElement : table : String
+WhereElement : field : String
+WhereElement : operator : {= | >= | ... }
+WhereElement : value : String | Number
+WhereElement : format()
+
+SQLRequestTree *-- LeftJoinElement
+SQLRequestTree *-- ColumnElement
+SQLRequestTree *-- WhereElement
+
+@enduml

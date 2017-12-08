@@ -19,10 +19,19 @@ function getSQLRequest(naturalRequest) {
         const info =
             "Heure de génération de la requête: " + time + "<br>" +
             "Requête préparsée: " + "<br>" +
-            parsedData["preformatted_request"] + "<br>" +
-            "Choix de lemmes alternatifs: " + "<br>" +
-            parsedData["lemmas_choices"];
+            parsedData["preformatted_request"] + "<br>";
         $("#sql_info").html(info);
+
+        let lemma_html = "";
+        for (const initial_word of Object.keys(parsedData["lemmas_choices"])) {
+            const lemmas = parsedData["lemmas_choices"][initial_word];
+            lemma_html += initial_word + ": " + lemmas;
+            lemma_html += "<br>";
+        }
+        if (lemma_html != "") {
+            $("#lemmas_choices").html("<h3>Lemmes alternatifs</h3>" + lemma_html);
+            $("#lemmas_choices").show()
+        }
 
         $("#sql_info").show();
         $("#sql_form").show();
@@ -109,9 +118,11 @@ $('#natural_request_form').submit((event) => {
     event.preventDefault();
     $("#sql").val("");
     $("#sql_info").text("");
+    $("#lemmas_choices").html("");
 
     $("#sql_info").hide();
     $("#sql_form").hide();
+    $("#lemmas_choices").hide();
     $("#error_natural_request_form").hide();
 
     getSQLRequest($('#natural_request').val());
@@ -134,4 +145,5 @@ $('#sql_form').submit((event) => {
 $("#error_natural_request_form").hide();
 $("#error_sql_form").hide();
 $("#sql_info").hide();
+$("#lemmas_choices").hide();
 $("#results_info").hide();
