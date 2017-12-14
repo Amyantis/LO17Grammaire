@@ -17,7 +17,7 @@ param:
     ;
 
 time_expression:
-    (year_ = year | month_year_ = month_year | year date_ = date | date_interval_ = date_interval)
+    (year_ = year | month_year_ = month_year | date_ = date | date_interval_ = date_interval)
     ;
 
 date_interval:
@@ -30,7 +30,7 @@ date:
     ;
 
 month_year:
-    MONTH year_ = year
+    month_ = MONTH year_ = year
     ;
 
 year:
