@@ -13,11 +13,11 @@ param:
     ;
 
 time_expression:
-    (year_ = year | month_year_ = month_year | date_ = date | date_interval_ = date_interval)
+    (year_ = year | month_year_ = month_year | date_interval_ = date_interval | date_ = date)
     ;
 
 date_interval:
-    a = date b = date
+    a = date CONJ_ET b = date
     ;
 
 date:
@@ -47,6 +47,7 @@ COUNT: 'combien';
 TYPE: 'article' | 'rubrique' | 'contact';
 
 CONJ: 'et' | 'ou';
+CONJ_ET: 'et';
 MOT: 'mot' | 'contenir' | 'parler' | 'parlent';
 
 WHEN: 'parution' | 'en';

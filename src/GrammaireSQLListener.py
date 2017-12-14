@@ -174,7 +174,7 @@ class GrammaireSQLListener(ParseTreeListener):
             d3 = ctx.year_.digit3.text
             d4 = ctx.year_.digit4.text
             year = int("".join([d1, d2, d3, d4]))
-            self.sql_request_tree.where_elements.append("".join(["date.annee = '%d'" % year]))
+            self.sql_request_tree.where_elements.append("date.annee = '%d'" % year)
 
         if ctx.month_year_ is not None:
             d1 = ctx.month_year_.year_.digit1.text
@@ -183,28 +183,44 @@ class GrammaireSQLListener(ParseTreeListener):
             d4 = ctx.month_year_.year_.digit4.text
             year = int("".join([d1, d2, d3, d4]))
             numeric_month = self.month_string_to_number(ctx.month_year_.month_.text)
-            self.sql_request_tree.where_elements.append("".join(["date.annee = '%d'" % year, "and date.month = '%d'" % numeric_month ]))
+            self.sql_request_tree.where_elements.append("date.annee = '%d' AND date.month = '%d'" % (year, numeric_month))
 
-        if ctx.date_ is not None:
-            d1 = ctx.date_.year_.digit1.text
-            d2 = ctx.date_.year_.digit2.text
-            d3 = ctx.date_.year_.digit3.text
-            d4 = ctx.date_.year_.digit4.text
-            year = int("".join([d1, d2, d3, d4]))
+        date_ = ctx.date_
+        if date_ is not None:
+            day, month, year = self.parse_date(date_)
 
-            d5 = ctx.date_.month_.digit1.text
-            d6 = ctx.date_.month_.digit2.text
-            month = int("".join([d5, d6]))
+            constraint = "date.annee = '%d' AND date.month = '%d' AND date.day = '%d'" % \
+                         (year, month, day)
+            self.sql_request_tree.where_elements.append(constraint)
 
-            d7 = ctx.date_.day_.digit1.text
-            d8 = ctx.date_.day_.digit2.text
-            day = int("".join([d7, d8]))
-            self.sql_request_tree.where_elements.append("".join(["date.annee = '%d'" % year, "and date.month = '%d'" % month, "and date.day = '%d'" % day]))
+        if ctx.date_interval_ is not None:
+            day_a, month_a, year_a = self.parse_date(ctx.date_interval_.a)
+            day_b, month_b, year_b = self.parse_date(ctx.date_interval_.b)
+
+            constraint = "date.annee >= '%d' AND date.month >= '%d' AND date.day >= '%d'" \
+                         " AND " \
+                         "date.annee <= '%d' AND date.month <= '%d' AND date.day <= '%d'" % \
+                         (day_a, month_a, year_a, day_b, month_b, year_b)
+            self.sql_request_tree.where_elements.append(constraint)
 
         if ctx.date_interval_ is not None:
             pass
 
             # Exit a parse tree produced by GrammaireSQLParser#time_expression.
+
+    def parse_date(self, date):
+        d1 = date.year_.digit1.text
+        d2 = date.year_.digit2.text
+        d3 = date.year_.digit3.text
+        d4 = date.year_.digit4.text
+        year = int("".join([d1, d2, d3, d4]))
+        d5 = date.month_.digit1.text
+        d6 = date.month_.digit2.text
+        month = int("".join([d5, d6]))
+        d7 = date.day_.digit1.text
+        d8 = date.day_.digit2.text
+        day = int("".join([d7, d8]))
+        return day, month, year
 
     def exitTime_expression(self, ctx: GrammaireSQLParser.Time_expressionContext):
         pass

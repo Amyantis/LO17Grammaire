@@ -6,12 +6,14 @@ Generate `antlr4` classes from our grammar:
 antlr4 -o gen -listener -visitor -Dlanguage=Python3 GrammaireSQL.g4
 ```
 
+Versions: `antlr4-python3-runtime==4.5.3` and `anltr4.5.3` (compiler).
+
 ## Webapp
 Start Flask app:
 ```
 python webapp/Flask.py
 ```
-Then, open `webapp/index.html` in a browser.
+Then, open `http://127.0.0.1:5000/index.html` in a browser.
 
 # Description des objectifs
 Gérer des requêtes portant sur les articles, éventuellement avec des contraintes de contenu et ou de temporalité.
