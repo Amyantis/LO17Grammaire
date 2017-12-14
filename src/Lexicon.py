@@ -7,9 +7,9 @@ class Lexicon():
         if lines is None:
             lines = Lexicon.get_lexicon()
         self.lexicon = {line[0].strip(): line[1].strip() for line in lines}
-        self.proximity_threshold = 80
+        self.proximity_threshold = 75
         self.proximity_letters_threshold = 3
-        self.levenshtein_distance_threshold = 1
+        self.levenshtein_distance_threshold = 2
 
     def get(self, word):
         lemma = self.lexicon.get(word.lower())
