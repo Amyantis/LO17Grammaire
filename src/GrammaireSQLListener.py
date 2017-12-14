@@ -1,5 +1,6 @@
 # Generated from GrammaireSQL.g4 by ANTLR 4.5.3
 from antlr4 import *
+import calendar
 
 # This class defines a complete listener for a parse tree produced by GrammaireSQLParser.
 from gen.GrammaireSQLLexer import GrammaireSQLLexer
@@ -166,6 +167,7 @@ class GrammaireSQLListener(ParseTreeListener):
 
     # Enter a parse tree produced by GrammaireSQLParser#time_expression.
     def enterTime_expression(self, ctx: GrammaireSQLParser.Time_expressionContext):
+
         if ctx.year_ is not None:
             d1 = ctx.year_.digit1.text
             d2 = ctx.year_.digit2.text
@@ -174,8 +176,31 @@ class GrammaireSQLListener(ParseTreeListener):
             year = int("".join([d1, d2, d3, d4]))
             self.sql_request_tree.where_elements.append("".join(["date.annee = '%d'" % year]))
 
+        if ctx.month_year_ is not None:
+            d1 = ctx.month_year_.year_.digit1.text
+            d2 = ctx.month_year_.year_.digit2.text
+            d3 = ctx.month_year_.year_.digit3.text
+            d4 = ctx.month_year_.year_.digit4.text
+            year = int("".join([d1, d2, d3, d4]))
+            numeric_month = self.month_string_to_number(ctx.month_year_.month_.text)
+            self.sql_request_tree.where_elements.append("".join(["date.annee = '%d'" % year, "and date.month = '%d'" % numeric_month ]))
+
         if ctx.date_ is not None:
-            pass
+            d1 = ctx.date_.year_.digit1.text
+            d2 = ctx.date_.year_.digit2.text
+            d3 = ctx.date_.year_.digit3.text
+            d4 = ctx.date_.year_.digit4.text
+            year = int("".join([d1, d2, d3, d4]))
+
+            d5 = ctx.date_.month_.digit1.text
+            d6 = ctx.date_.month_.digit2.text
+            month = int("".join([d5, d6]))
+
+            d7 = ctx.date_.day_.digit1.text
+            d8 = ctx.date_.day_.digit2.text
+            day = int("".join([d7, d8]))
+            self.sql_request_tree.where_elements.append("".join(["date.annee = '%d'" % year, "and date.month = '%d'" % month, "and date.day = '%d'" % day]))
+
         if ctx.date_interval_ is not None:
             pass
 
@@ -224,6 +249,28 @@ class GrammaireSQLListener(ParseTreeListener):
     def exitDay(self, ctx: GrammaireSQLParser.DayContext):
         pass
 
+    def month_string_to_number(self, string):
+        m = {
+            'janvier':1,
+            'février':2,
+            'mars':3,
+            'avril':4,
+            'mai':5,
+            'juin':6,
+            'juillet':7,
+            'aout':8,
+            'septembre':9,
+            'octobre':10,
+            'novembre':11,
+            'décembre':12
+            }
+        s = string.strip().lower()
+
+        try:
+            out = m[s]
+            return out
+        except:
+            raise ValueError('Not a month')
 
 if __name__ == '__main__':
     # testing the Listener alone:
