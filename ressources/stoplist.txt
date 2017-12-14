@@ -69,3 +69,4 @@ quels
 quel
 quelle
 quelles
+nombre

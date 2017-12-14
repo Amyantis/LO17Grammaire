@@ -25,7 +25,7 @@ class SQLRequestTree:
     def __init__(self):
         self.request_type = None
         self.columns = []
-        self.tables = []
+        self.tables = set()
         self.left_join_elements = []
         self.where_elements = []
 
@@ -40,7 +40,7 @@ class SQLRequestTree:
                 columns_distinct.append(column)
 
         if 'fichier' not in [col.split('.')[1] for col in columns_distinct]:
-            columns_distinct.append('%s.fichier' % self.tables[0])
+            columns_distinct.append('%s.fichier' % list(self.tables)[0])
 
         columns = sorted(columns_distinct,
                          key=lambda col: col.split('.')[1])
@@ -63,12 +63,17 @@ class SQLRequestTree:
         if request_type is None:
             request_type = ""
 
+        tables = self.tables
+        for table_name in {col.split('.')[0] for col in columns_distinct}:
+            tables.add(table_name)
+        tables = sorted(tables)
+
         args = [
             "SELECT",
             request_type,
             ", ".join(columns),
             "FROM",
-            ", ".join(self.tables),
+            ", ".join(tables),
             *self.format_left_join_commands(),
             *where
         ]
@@ -84,47 +89,39 @@ class GrammaireSQLListener(ParseTreeListener):
         super().__init__()
         self.sql_request_tree = SQLRequestTree()
 
-    # Enter a parse tree produced by GrammaireSQLParser#listrequete.
-    def enterListrequete(self, ctx: GrammaireSQLParser.ListrequeteContext):
-        pass
-
-    # Exit a parse tree produced by GrammaireSQLParser#listrequete.
-    def exitListrequete(self, ctx: GrammaireSQLParser.ListrequeteContext):
-        pass
-
     # Enter a parse tree produced by GrammaireSQLParser#requete.
     def enterRequete(self, ctx: GrammaireSQLParser.RequeteContext):
         if ctx.COUNT() is not None:
             self.sql_request_tree.request_type = "COUNT(*)"
 
-        if ctx.SELECT() is not None:
+        if ctx.type_ is None or ctx.SELECT() is not None:
             self.sql_request_tree.request_type = "DISTINCT"
 
         columns = []
-        if ctx.type_.text == 'article':
+        if ctx.type_ is None or ctx.type_.text == 'article':
             columns += [
                 'texte.mot',
                 'texte.rubrique',
                 'texte.fichier',
                 'texte.numero',
             ]
-            self.sql_request_tree.tables.append("texte")
+            self.sql_request_tree.tables.add("texte")
 
-        if ctx.type_.text == 'rubrique':
+        if ctx.type_ is not None and ctx.type_.text == 'rubrique':
             columns += [
                 'rubrique.rubrique',
                 'rubrique.fichier',
                 'rubrique.numero'
             ]
-            self.sql_request_tree.tables.append("rubrique")
+            self.sql_request_tree.tables.add("rubrique")
 
-        if ctx.type_.text == 'contact':
+        if ctx.type_ is not None and ctx.type_.text == 'contact':
             columns += [
                 'email.email',
                 'email.fichier',
                 'email.numero',
             ]
-            self.sql_request_tree.tables.append("email")
+            self.sql_request_tree.tables.add("email")
 
         self.sql_request_tree.columns = columns
 
@@ -132,7 +129,7 @@ class GrammaireSQLListener(ParseTreeListener):
             left_join = LeftJoinElement('date', 'fichier')
             self.sql_request_tree.left_join_elements.append(left_join)
 
-        if ctx.MOT():
+        if ctx.MOT() or len(ctx.params()) > 0:
             if "texte.mot" not in self.sql_request_tree.columns:
                 left_join = LeftJoinElement('texte', 'fichier')
                 self.sql_request_tree.left_join_elements.append(left_join)
@@ -149,7 +146,7 @@ class GrammaireSQLListener(ParseTreeListener):
             conj = ctx.conj.text
             if conj == 'et':
                 s.append('AND')
-            if conj == 'or':
+            if conj == 'ou':
                 s.append('OR')
             s.append("texte.mot LIKE '%{}%'".format(ctx.par2.a.text))
 

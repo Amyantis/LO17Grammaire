@@ -1,11 +1,7 @@
 grammar GrammaireSQL;
 
-listrequete:
-    r = requete END
-    ;
-
 requete:
-    (SELECT|COUNT) (type_ = TYPE) ((MOT ps = params) | (WHEN te = time_expression))*
+    ((SELECT|COUNT)? (type_ = TYPE)?) ((MOT? ps = params) | (WHEN te = time_expression))*
     ;
 
 params:
@@ -47,7 +43,6 @@ COUNT: 'combien';
 TYPE: 'article' | 'rubrique' | 'contact';
 
 CONJ: 'et' | 'ou';
-END: '.' | '\n';
 MOT: 'mot' | 'contenir' | 'parler' | 'parlent';
 
 WHEN: 'parution' | 'en';

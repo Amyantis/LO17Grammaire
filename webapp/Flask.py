@@ -24,6 +24,9 @@ def natural():
     preformatted_request, lemmas_choices = preformatter.preformat(natural_request)
     sql = convert_natural_to_sql(preformatted_request)
 
+    for key, lemmas in lemmas_choices.items():
+        lemmas_choices[key] = list(set(lemmas))
+
     return json.dumps({
         "sql_request": sql,
         "preformatted_request": preformatted_request,
